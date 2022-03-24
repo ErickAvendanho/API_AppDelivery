@@ -5,6 +5,10 @@ const server = http.createServer(app);
 const logger = require('morgan');
 const cors = require('cors');
 
+/*
+* RUTAS
+*/
+const users = require('./routes/usersRoutes');
 
 const port = process.env.PORT || 3000;
 
@@ -19,25 +23,35 @@ app.disable('x-powered-by');
 
 app.set('port', port);
 
+/*
+*  LLAMANDO A LAS RUTAS
+*/ 
+users(app);
+
 server.listen(3000, '192.168.100.181' || 'localhost', function(){ //Aquí se cambia la dirección IPv4 de ustedes. La IPv4 se cambia cada que se reinicia su PC
     console.log('Aplicacion de NodeJS ' + port + ' Iniciada...')
 });
 
 //Para ejecutar, abrir terminal y ejecutar el comando "node server.js"
 
-app.get('/', (req, res) => {
-    res.send('Ruta raiz del backend');
-});
+// app.get('/', (req, res) => {
+//     res.send('Ruta raiz del backend');
+// });
 
-app.get('/test', (req, res) => {
-    res.send('Esta es la ruta TEST');
-});
+// app.get('/test', (req, res) => {
+//     res.send('Esta es la ruta TEST');
+// });
 
 //ERROR HANDLER 
 app.use((err, req, res, next) => {
     console.log(err);
     res.status(err.status || 500).send(err.stack);
 });
+
+module.exports = {
+    app: app,
+    server: server
+}
 
 // 200 - ES UNA RESPUESTA EXITOSA
 // 404 - SIGNIFICA QUE LA URL NO EXISTE
