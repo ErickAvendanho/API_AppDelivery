@@ -1,4 +1,7 @@
+//NOTA: Ejecutar en terminal comando "npm i crypto" para dependencia de encriptación 
+
 const db = require('../config/config');
+const crypto = require('crypto');
 
 const User = {};
 
@@ -14,6 +17,10 @@ User.getAll = () => {
 }
 
 User.create = (user) => {
+    
+    const myPasswordHashed = crypto.createHash('md5').update(user.password).digest('hex');
+    user.password = myPasswordHashed;
+    
     const sql = `
     INSERT INTO users (
         email,
