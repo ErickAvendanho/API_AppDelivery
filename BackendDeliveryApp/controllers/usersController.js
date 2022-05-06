@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Rol = require('../models/rol');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
@@ -23,9 +24,11 @@ module.exports = {
             const user = req.body;
             const data = await User.create(user);
 
+            await Rol.create(data.id, 1); //ROL POR DEFECTO (CLIENTE)
+
             return res.status(201).json({
                 success: true,
-                message: 'El registro se realizo correctamente',
+                message: 'El registro se realizo correctamente, ahora inicia sesion',
                 data: data.id
             });
         }catch (error) {
@@ -64,7 +67,10 @@ module.exports = {
                     phone: myUser.phone,
                     image: myUser.image,
                     session_token: `JWT ${token}`,
+                    roles: myUser.roles
                 }
+
+                console.log(`USARIO ENVIADO ${data}`);
 
                 return res.status(201).json({
                     success: true,
