@@ -4,6 +4,20 @@ const http = require('http'); //NOTA: Abrir terminal y ejecutar el comando "npm 
 const server = http.createServer(app);
 const logger = require('morgan');
 const cors = require('cors');
+const multer = require('multer');
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json');
+
+/*
+* INICIALIZAR FIREBASE ADMIN
+*/
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+})
+
+const upload = multer({
+    storage: multer.memoryStorage()
+})
 
 /*
 * RUTAS
@@ -26,7 +40,7 @@ app.set('port', port);
 /*
 *  LLAMANDO A LAS RUTAS
 */ 
-users(app);
+users(app, upload);
 
 server.listen(3000, '192.168.100.181' || 'localhost', function(){ //Aquí se cambia la dirección IPv4 de ustedes. La IPv4 se cambia cada que se reinicia su PC
     console.log('Aplicacion de NodeJS ' + port + ' Iniciada...')
