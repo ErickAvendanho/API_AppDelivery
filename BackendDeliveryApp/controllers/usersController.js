@@ -44,7 +44,7 @@ module.exports = {
 
     async registerWithImage(req, res, next){
         try{
-            const user = JSON.parse(req.body);
+            const user = JSON.parse(req.body.user);
             console.log(`Datos enviados del usuario: ${user}`);
             
             const files = req.files;
