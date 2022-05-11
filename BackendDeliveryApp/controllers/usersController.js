@@ -154,6 +154,8 @@ module.exports = {
                     roles: myUser.roles
                 }
 
+                await User.updateToken(myUser.id, `JWT ${token}`);
+
                 console.log(`USARIO ENVIADO ${data}`);
 
                 return res.status(201).json({
