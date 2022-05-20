@@ -7,6 +7,7 @@ const cors = require('cors');
 const multer = require('multer');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
+const passport = require('passport');
 
 /*
 * INICIALIZAR FIREBASE ADMIN
@@ -32,6 +33,9 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(cors());
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
 
 app.disable('x-powered-by');
 
