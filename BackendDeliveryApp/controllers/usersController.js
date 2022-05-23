@@ -3,6 +3,7 @@ const Rol = require('../models/rol');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 const storage = require('../utils/cloud_storage');
+const { request } = require('http');
 
 module.exports = {
 
@@ -142,6 +143,7 @@ module.exports = {
             if(User.isPasswordMatched(password, myUser.password)) {
                 const token = jwt.sign({id: myUser.id, email: myUser.email}, keys.secretOrKey, {
                     //expiresIn: (60*60*24) // 1 HORA
+                    //expiresIn: (60*2) // 2 MINUTOS
                 });
                 const data = {
                     id: myUser.id,
@@ -162,7 +164,7 @@ module.exports = {
                     success: true,
                     data: data,
                     message: 'El usuario ha sido autenticado'
-                })
+                });
             }else{
                 return res.status(401).json({
                     success: false,
@@ -177,5 +179,26 @@ module.exports = {
                 error: error
             });
         }
+    },
+
+    async logout(req, res, next){
+
+        try{
+            const id = request.body.id;
+            await User.updateToken(id, null);
+            return res.status(201).json({
+                success: true,
+                message: 'La sesion del usuario se ha cerrado correctamente'
+            }); 
+        }
+        catch (e){
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success: false,
+                message: 'Error al momento de cerrar sesion',
+                error: error
+            });
+        }
     }
+
 };
